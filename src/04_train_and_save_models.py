@@ -1,19 +1,24 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
-
-
 import pandas as pd
 import numpy as np
 import joblib  # for saving models
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, confusion_matrix, precision_recall_curve
+from sklearn.metrics import classification_report, confusion_matrix, precision_recall_curve, auc
 from xgboost import XGBClassifier
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import learning_curve
+from sklearn.metrics import confusion_matrix
+
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -43,6 +48,12 @@ def scale_features(X_train, X_test):
     X_test_scaled = scaler.transform(X_test)
     return X_train_scaled, X_test_scaled
 
+# Function to save training data with column names
+def save_train_data(X_train_scaled, y_train, column_names, X_train_filepath, y_train_filepath):
+    X_train_df = pd.DataFrame(X_train_scaled, columns=column_names)
+    X_train_df.to_csv(X_train_filepath, index=False)
+    y_train.to_csv(y_train_filepath, index=False)
+    
 # Function to save test data with column names
 def save_test_data(X_test_scaled, y_test, column_names, X_test_filepath, y_test_filepath):
     X_test_df = pd.DataFrame(X_test_scaled, columns=column_names)
@@ -60,12 +71,33 @@ def train_and_save_logistic_regression(X_train_scaled, y_train, filename='../mod
     save_model(model_lr, filename)
     return model_lr
 
+
+
 # Model 2 Training - Random Forest
-def train_and_save_random_forest(X_train_scaled, y_train, filename='../models/random_forest_model.pkl'):
-    model_rf = RandomForestClassifier(n_estimators=100, random_state=42)
-    model_rf.fit(X_train_scaled, y_train)
-    save_model(model_rf, filename)
-    return model_rf
+def train_and_save_random_forest(X_train_scaled, y_train, filename='../models/random_forest_model.pkl', cv=3):
+    # First, conduct a Randomized Search to narrow down the parameter space
+    param_distributions = {'n_estimators': np.arange(100, 1001, 100), 
+        'max_depth': [None] + list(np.arange(5, 51, 5)),  
+        'min_samples_split': np.arange(2, 11, 1),  
+        'min_samples_leaf': np.arange(1, 11, 1),  
+        'bootstrap': [True, False]} 
+    rf_model_random = RandomForestClassifier(random_state=42)
+    random_search = RandomizedSearchCV(
+        estimator=rf_model_random,
+        param_distributions= param_distributions,
+        n_iter=8,
+        cv=cv,
+        random_state=42,
+        n_jobs=-1)
+    random_search.fit(X_train_scaled, y_train)
+    best_rf_model = random_search.best_estimator_
+    
+    save_model(best_rf_model, filename)
+    
+    print("Best parameters from Randomized Search:", random_search.best_params_)
+    print("Best score from Randomized Search:", random_search.best_score_)
+    
+    return best_rf_model
 
 # Model 3 Training - k-Nearest Neighbor
 def train_and_save_knn(X_train_scaled, y_train, filename='../models/knn_model.pkl'):
@@ -74,32 +106,47 @@ def train_and_save_knn(X_train_scaled, y_train, filename='../models/knn_model.pk
     save_model(model_knn, filename)
     return model_knn
 
-# Model 4 Training - XGBoost
-def train_and_save_xgboost(X_train_scaled, y_train, filename='../models/xgboost_model.pkl'):
-    model_xgb = XGBClassifier(use_label_encoder=False, eval_metric='logloss')
-    model_xgb.fit(X_train_scaled, y_train)
-    save_model(model_xgb, filename)
-    return model_xgb
 
-# Function for model evaluation
-def evaluate_model(model, X_test_scaled, y_test):
-    predictions = model.predict(X_test_scaled)
-    print("Classification Report:")
-    print(classification_report(y_test, predictions))
-    print("Confusion Matrix:")
-    print(confusion_matrix(y_test, predictions))
-    # Note: precision_recall_curve returns 3 arrays: precision, recall, thresholds. They need to be handled if used.
-    precision, recall, _ = precision_recall_curve(y_test, model.predict_proba(X_test_scaled)[:,1])
-    # Implement logic to use or display precision-recall data as needed
-    # For example, you might plot the precision-recall curve here
+from sklearn.model_selection import RandomizedSearchCV
+from xgboost import XGBClassifier
+
+# Model 4 Training and Hyperparameter tuning - XGBoost
+def train_and_save_xgboost(X_train_scaled, y_train, filename='../models/xgboost_model.pkl', cv=3, n_iter=8, random_state=42):
+    param_dist = {'n_estimators': np.arange(50, 300, 50),
+        'learning_rate': [0.01, 0.05, 0.1],
+        'max_depth': np.arange(3, 10, 2),
+        'subsample': [0.6, 0.8, 1.0],
+        'colsample_bytree': [0.6, 0.8, 1.0]}
     
+    xgb_clf = XGBClassifier(eval_metric='logloss', use_label_encoder=False)
+    
+    random_search = RandomizedSearchCV(
+        estimator=xgb_clf,
+        param_distributions=param_dist,
+        n_iter=n_iter,
+        cv=cv,
+        verbose=1,
+        n_jobs=-1,
+        random_state=random_state)
+    
+    random_search.fit(X_train_scaled, y_train)
+    best_xgb_model = random_search.best_estimator_
+    
+    save_model(best_xgb_model, filename)
+    
+    # Print the best parameters and score
+    print("Best parameters from Randomized Search:", random_search.best_params_)
+    print("Best score from Randomized Search:", random_search.best_score_)
+    
+    return best_xgb_model
+
 # Main pipeline execution
 def main():
-    # Assuming `data_filepath` and `target_column` are defined and the dataset is clean
     data_numeric = read_cleaned_data('../data/final/modeling_dataset_32k.csv')
     X, y, column_names = prepare_data_for_modeling(data_numeric, 'hit_song')
     X_train, X_test, y_train, y_test = split_data(X, y)
     X_train_scaled, X_test_scaled = scale_features(X_train, X_test)
+    save_train_data(X_test_scaled, y_test, column_names,'../data/final/X_train_scaled.csv','../data/final/y_train.csv')
     save_test_data(X_test_scaled, y_test, column_names,'../data/final/X_test_scaled.csv','../data/final/y_test.csv')
 
     # Train and save each model
@@ -107,21 +154,12 @@ def main():
         'logistic_regression': train_and_save_logistic_regression,
         'random_forest': train_and_save_random_forest,
         'knn': train_and_save_knn,
-        'xgboost': train_and_save_xgboost
-    }
+        'xgboost': train_and_save_xgboost}
 
-    for name, train_func in models.items():
+    for name, train_function in models.items():
         print(f"Train and save {name} model")
-        model = train_func(X_train_scaled, y_train)
-        evaluate_model(model, X_test_scaled, y_test)
-        # Optionally, add a line here to plot or further analyze model performance
+        model = train_function(X_train_scaled, y_train)
+
 
 if __name__ == '__main__':
     main()
-
-
-# In[ ]:
-
-
-
-
