@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import pandas as pd
 import numpy as np
 import joblib  # for saving models
@@ -40,7 +37,7 @@ def plot_confusion_matrix(y_test, predictions, model, labels=['Non-Hit', 'Hit'])
     conf_matrix = confusion_matrix(y_test, predictions)
     plt.figure(figsize=(5, 4))
     sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=labels, yticklabels=labels)
-    plt.title(f'{model_name} Confusion Matrix')
+    plt.title(f'{model} Confusion Matrix')
     plt.xlabel('Predicted')
     plt.ylabel('Actual')
     plt.show()
@@ -82,7 +79,7 @@ def print_feature_importance(model, column_names):
         print(f"{type(model).__name__} does not provide feature importance.")
 
     
-def evaluate_model(model, X_train_scaled, y_train, X_test_scaled, y_test, column_names):
+def evaluate_model(model, X_test_scaled, y_test, column_names):
     predictions = model.predict(X_test_scaled)
     print("Classification Report:")
     print(classification_report(y_test, predictions))
@@ -99,25 +96,15 @@ def main():
     X_test_scaled, y_test = read_split_data('../data/final/X_test_scaled.csv', 
                                                                      '../data/final/y_test.csv' )
     
-    logistic_regression, random_forest, knn, xgboost = import_pretrained_models('../models/logistic_regression_model.pkl',
+    logistic_regression, random_forest, knn, xgboost = load_pretrained_models('../models/logistic_regression_model.pkl',
                                                                                 '../models/random_forest_model.pkl', 
                                                                                 '../models/knn_model.pkl',
                                                                                 '../models/xgboost_model.pkl')
+    column_names = (pd.read_csv('../data/final/X_test_scaled.csv')).columns.tolist()
     models = [logistic_regression, random_forest, knn, xgboost]
-    for model in models():
+    for model in models:
         print(f"Evaluate {model} model")
-        evaluate_model(model, X_train_scaled, y_train, X_test_scaled, y_test, column_names)
+        evaluate_model(model, X_test_scaled, y_test, column_names)
 
 if __name__ == '__main__':
     main()
-#Train and save each model as .pkl, save test data (X_test_scaled, y_test)
-def main():
-    x_train_scaled, X_test_scaled, y_train, y_test = read_split_data('../data/final/X_train_scaled.csv',
-                                                                     '../data/final/X_test_scaled.csv', 
-                                                                     '../data/final/y_test.csv',
-                                                                     '../data/final/y_test.csv' )
-    
-    logistic_regression, random_forest, knn, xgboost = import_pretrained_models('../models/logistic_regression_model.pkl',
-                                                                                '../models/random_forest_model.pkl', 
-                                                                                '../models/knn_model.pkl',
-                                                                                '../models/xgboost_model.pkl')
