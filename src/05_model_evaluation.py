@@ -24,12 +24,10 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 # Read in test data
-def read_split_data(filepath_xtrain, filepath_xtest, filepath_ytrain, filepath_ytest):
-    X_train_scaled = pd.read_csv(filepath_xtrain)
+def read_split_data(filepath_xtest, filepath_ytest):
     X_test_scaled = pd.read_csv(filepath_xtest)
-    y_train = pd.read_csv(filepath_ytrain).squeeze()
     y_test = pd.read_csv(filepath_ytest).squeeze()
-    return X_train_scaled, X_test_scaled, y_train, y_test
+    return X_test_scaled, y_test
 
 def load_pretrained_models(lr_filepath, rf_filepath, knn_filepath, xgb_filepath):
     logistic_regression = joblib.load(lr_filepath)
@@ -58,30 +56,6 @@ def plot_precision_recall_curve(y_test, predictions, title='Precision-Recall Cur
     plt.legend(loc='best')
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
-    
-def plot_learning_curve(model, X_train_scaled, y_train, cv=3, scoring='accuracy', title='Learning Curve'):
-    train_sizes = np.linspace(0.1, 1.0, 5)
-    train_sizes, train_scores, val_scores = learning_curve(
-        model, X_train_scaled, y_train, train_sizes=train_sizes, cv=cv, scoring=scoring
-    )
-    
-    train_mean = np.mean(train_scores, axis=1)
-    train_std = np.std(train_scores, axis=1)
-    val_mean = np.mean(val_scores, axis=1)
-    val_std = np.std(val_scores, axis=1)
-    
-    plt.plot(train_sizes, train_mean, label='Training score', color='blue', marker='o')
-    plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, color='blue', alpha=0.15)
-    
-    plt.plot(train_sizes, val_mean, label='Cross-validation score', color='green', marker='o')
-    plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, color='green', alpha=0.15)
-    
-    plt.title(title)
-    plt.xlabel('Training Set Size')
-    plt.ylabel('Accuracy Score')
-    plt.legend(loc='lower right')
-    plt.grid()
     plt.show()
     
 def print_feature_importance(model, column_names):
@@ -122,9 +96,7 @@ def evaluate_model(model, X_train_scaled, y_train, X_test_scaled, y_test, column
     
 # Main pipeline execution
 def main():
-    x_train_scaled, X_test_scaled, y_train, y_test = read_split_data('../data/final/X_train_scaled.csv',
-                                                                     '../data/final/X_test_scaled.csv', 
-                                                                     '../data/final/y_test.csv',
+    X_test_scaled, y_test = read_split_data('../data/final/X_test_scaled.csv', 
                                                                      '../data/final/y_test.csv' )
     
     logistic_regression, random_forest, knn, xgboost = import_pretrained_models('../models/logistic_regression_model.pkl',
@@ -149,11 +121,3 @@ def main():
                                                                                 '../models/random_forest_model.pkl', 
                                                                                 '../models/knn_model.pkl',
                                                                                 '../models/xgboost_model.pkl')
-    
-    
-    
-
-
-
-if __name__ == '__main__':
-    main()
