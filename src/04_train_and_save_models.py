@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import pandas as pd
 import numpy as np
 import joblib  # for saving models
@@ -182,9 +179,9 @@ def main():
 
     for name, train_function in models.items():
         print(f"Train and save {name} model")
+        model = train_function(X_train_scaled, y_train)
         print("Plot Learning Curve:")
         print(plot_learning_curve(model, X_train_scaled, y_train, cv=3, scoring='accuracy', title='Learning Curve'))
-        model = train_function(X_train_scaled, y_train)
 
 
 if __name__ == '__main__':
