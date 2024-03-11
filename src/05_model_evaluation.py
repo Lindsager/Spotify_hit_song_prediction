@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import joblib  # for saving models
+import joblib
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import RandomizedSearchCV
