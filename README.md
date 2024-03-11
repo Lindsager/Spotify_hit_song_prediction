@@ -23,6 +23,12 @@ The final XGBoost model considers various audio features, including
 - Valence
 - Release Year
 
+## Pipeline (From data processing through model evaluation)
+- 01_data_pre_processing.py: this reads in all raw data files, normalizes formatting across datasets, performs merging and removes overlapping samples [output = processed datasets]
+- 02_03_data_normalization_and_sampling.py: this reads in the pre-processed data files, handles outliers, sets minimum sampling year to 1985, bins non-hit samples by year and performs random stratified sampling on non-hit songs [output = final dataset]
+- 04_train_and_save_models.py: this trains 4 models (logistic regression, random forest, k-nearest neighbors and xgboost), completes hyper parameter tuning by random search for tree-based models and saves the best model of each as a .pkl file [output = pre-trained models]
+- 05_model_evaluation.py: this evaluates each of the pre-trained models and returns success metrics such as accuracy and precision-recall
 
-
-
+## Running the Model Evaluation Script
+1. Clone the repository:
+2. Open 
