@@ -32,5 +32,6 @@ The final XGBoost model considers various audio features, including
 ## Running the Model Evaluation Script
 1. Clone the repository: https://github.com/Lindsager/Spotify_hit_song_prediction
 2. From command line, navigate to repository directory location (folder level = src): similar to --> cd User\Documents\GitHub\Spotify_hit_song_prediction\src
-3. To run pre-trained model evaluation script: '05_model_evaluation.py'
-4. The output should include tabular confusion matrix, accuracy, precision, recall and F1 scores for each of the models [logistic regression, random forest, knn, XGBoost]
+3. Install requirements.txt: pip install -r ..\requirements.txt
+4. To run pre-trained model evaluation script: '05_model_evaluation.py'
+5. The output should include tabular confusion matrix, accuracy, precision, recall and F1 scores for each of the models [logistic regression, random forest, knn, XGBoost]
