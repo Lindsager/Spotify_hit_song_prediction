@@ -66,12 +66,26 @@ def save_model(model, filename):
 
 # Model 1 Training - Logistic Regression
 def train_and_save_logistic_regression(X_train_scaled, y_train, filename='../models/logistic_regression_model.pkl'):
+    param_dist = {'solver': ['liblinear', 'saga'],
+        'penalty': ['l1', 'l2'],
+        'C': np.logspace(-5, 5, 10)}
     model_lr = LogisticRegression()
-    model_lr.fit(X_train_scaled, y_train)
-    save_model(model_lr, filename)
-    return model_lr
+    random_search = RandomizedSearchCV(
+        estimator=model_lr, 
+        param_distributions=param_dist, 
+        n_iter=10, 
+        cv=3,
+        verbose=1, 
+        random_state=42,
+        n_jobs=-1)
+    random_search.fit(X_train_scaled, y_train)
+    best_lr_model = random_search.best_estimator_
+    save_model(best_lr_model, filename)
+    
+    print("Best parameters:", random_search.best_params_)
+    print("Best score:", random_search.best_score_)
 
-
+    return best_lr_model
 
 # Model 2 Training - Random Forest
 def train_and_save_random_forest(X_train_scaled, y_train, filename='../models/random_forest_model.pkl', cv=3):
