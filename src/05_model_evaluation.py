@@ -88,8 +88,8 @@ def main():
     column_names = (pd.read_csv('../data/final/X_test_scaled.csv')).columns.tolist()
     models = [logistic_regression, random_forest, knn, xgboost]
     for model in models:
-            print("_____________________________________________________________________")
-            print("_____________________________________________________________________")
+            print("____________________________________________________________________________________________")
+            print("____________________________________________________________________________________________")
             print(f"Evaluating {model} model...")
             evaluate_model(model, X_test_scaled, y_test, column_names)
 
