@@ -29,9 +29,9 @@ The final XGBoost model considers various audio features, including
 - 04_train_and_save_models.py: this trains 4 models (logistic regression, random forest, k-nearest neighbors and xgboost), completes hyper parameter tuning by random search for tree-based models and saves the best model of each as a .pkl file [output = pre-trained models]
 - 05_model_evaluation.py: this evaluates each of the pre-trained models and returns success metrics such as accuracy and precision-recall
 
-## Running the Model Evaluation Script (Recommendation: from a virtual environment):
+## Running the Model Evaluation Script (Recommendation - Run from a virtual environment):
 1. Clone the repository: https://github.com/Lindsager/Spotify_hit_song_prediction
-2. From command line, navigate to repository directory location (folder level = src): similar to --> cd User\Documents\GitHub\Spotify_hit_song_prediction\src
+2. From command line, navigate to repository directory location (folder level = src): similar to --> cd "User\Documents\GitHub\Spotify_hit_song_prediction\src"
 3. Create the virtual environment:
    - macOS/Linux
      - python3 -m venv venv
@@ -39,7 +39,31 @@ The final XGBoost model considers various audio features, including
    - Windows
      - python -m venv venv
      - .\venv\Scripts\activate
-5. Prerequisites:
+4. Prerequisites:
    - Install requirements.txt: pip install -r ..\requirements.txt
-7. Run pre-trained model evaluation script: python 05_model_evaluation.py
-8. The output should include tabular confusion matrix, accuracy, precision, recall F1 scores and feature/coefficient importance for each of the models [logistic regression, random forest, knn, XGBoost]
+5. Run pre-trained model evaluation script: python 05_model_evaluation.py
+6. The output should include tabular confusion matrix, accuracy, precision, recall F1 scores and feature/coefficient importance for each of the models [logistic regression, random forest, knn, XGBoost]
+
+## Running the Entire Data Science Pipeline (Recommendation - Run from a virtual environment):
+1. Clone the repository: https://github.com/Lindsager/Spotify_hit_song_prediction
+2. From command line, navigate to repository directory location (folder level = src): similar to --> cd "User\Documents\GitHub\Spotify_hit_song_prediction\src"
+3. Create the virtual environment:
+   - macOS/Linux
+     - python3 -m venv venv
+     - source .venv/bin/activate
+   - Windows
+     - python -m venv venv
+     - .\venv\Scripts\activate
+4. Prerequisites:
+   - Install requirements.txt: pip install -r ..\requirements.txt
+5. Run the data processing pipeline:
+   - python 01_data_pre_processing.py
+	- expected output: semi-processed hit and non-hit song datasets
+   - python 02_03_data_normalization_and_sampling.py
+	- expected output: finalized and normalized combined hit/non-hit song dataset for model training, separate finalized datasets for hit and non-hit songs
+6. Run the model training, tuning and evaluation pipeline:
+   - python 04_train_and_save_models.py
+	- expected output: pre-trained and tuned classification models saved as .pkl files
+   - python 05_model_evaluation.py
+	- expected output: tabular confusion matrix, accuracy, precision, recall F1 scores and feature/coefficient importance for each of the models 
+
