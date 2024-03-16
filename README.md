@@ -23,6 +23,8 @@ The final XGBoost model considers various audio features, including
 - Valence
 - Release Year
 
+## Notebooks (Includes data processing, exploratory data analysis and modeling process with visual components)
+
 ## Pipeline (From data processing through model evaluation)
 - 01_data_pre_processing.py: this reads in all raw data files, normalizes formatting across datasets, performs merging and removes overlapping samples [output = processed datasets]
 - 02_03_data_normalization_and_sampling.py: this reads in the pre-processed data files, handles outliers, sets minimum sampling year to 1985, bins non-hit samples by year and performs random stratified sampling on non-hit songs [output = final dataset]
@@ -58,12 +60,12 @@ The final XGBoost model considers various audio features, including
    - Install requirements.txt: pip install -r ..\requirements.txt
 5. Run the data processing pipeline:
    - python 01_data_pre_processing.py
-	- expected output: semi-processed hit and non-hit song datasets
+     - expected output: semi-processed hit and non-hit song datasets
    - python 02_03_data_normalization_and_sampling.py
-	- expected output: finalized and normalized combined hit/non-hit song dataset for model training, separate finalized datasets for hit and non-hit songs
+     - expected output: finalized and normalized combined hit/non-hit song dataset for model training, separate finalized datasets for hit and non-hit songs
 6. Run the model training, tuning and evaluation pipeline:
    - python 04_train_and_save_models.py
-	- expected output: pre-trained and tuned classification models saved as .pkl files
+     - expected output: pre-trained and tuned classification models saved as .pkl files
    - python 05_model_evaluation.py
-	- expected output: tabular confusion matrix, accuracy, precision, recall F1 scores and feature/coefficient importance for each of the models 
+     - expected output: tabular confusion matrix, accuracy, precision, recall F1 scores and feature/coefficient importance for each of the models 
 
