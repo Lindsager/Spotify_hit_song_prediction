@@ -23,6 +23,8 @@ The final XGBoost model considers various audio features, including
 - Valence
 - Release Year
 
+## Notebooks (Includes data processing, exploratory data analysis and modeling process with visual components)
+
 ## Pipeline (From data processing through model evaluation)
 - 01_data_pre_processing.py: this reads in all raw data files, normalizes formatting across datasets, performs merging and removes overlapping samples [output = processed datasets]
 - 02_03_data_normalization_and_sampling.py: this reads in the pre-processed data files, handles outliers, sets minimum sampling year to 1985, bins non-hit samples by year and performs random stratified sampling on non-hit songs [output = final dataset]
