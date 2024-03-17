@@ -14,14 +14,23 @@ The  dataset composed of audio features from hit and non-hit Spotify songs acros
 
 ## Model Features:
 The final XGBoost model considers various audio features, including
-- Danceability
-- Energy
-- Loudness
-- Speechiness
-- Acousticness
-- Instrumentalness
-- Valence
-- Release Year
+Audio Features	Description	Range
+Year	Year of track release	1958-2023
+Danceability	Track suitability for dancing	0 to 1
+Energy	The perceptual measure of intensity and activity	0 to 1
+Key	Integer mapped to pitch, standard pitch class notation	 -1 to 11
+Loudness	Overall loudness in decibels (dB)	-60 to 0 db
+Mode	Modality of a track (major/minor)	major = 1
+Speechiness	A confidence measure of whether a track contains spoken words	0 to 1
+Acousticness	A confidence measure of whether a track is acoustic	0 to 1
+Instrumentalness	Predicts whether a track contains no vocals	0 to 1
+Liveness	Detects the presence of an audience in the recording	0 to 1
+Valence	The conveyed musical positiveness	0 to 1
+Tempo	Estimated beats per minute (bpm)	< 250 bpm
+Time Signature	Notational convention of beats per bar	3 to 7
+Duration (ms)	Duration in milliseconds	0 - 3M
+![image](https://github.com/Lindsager/Spotify_hit_song_prediction/assets/102261851/96f726bf-e575-4abe-ab44-53dbe87b27b9)
+
 
 ## Notebooks (Includes data processing, exploratory data analysis and modeling process with visual components)
 
