@@ -33,31 +33,35 @@ The final XGBoost model considers various audio features, including
 
 ## Running the Model Evaluation Script (Recommendation - Run from a virtual environment):
 1. Clone the repository: https://github.com/Lindsager/Spotify_hit_song_prediction
-2. From command line, navigate to repository directory location (folder level = src): similar to --> cd "User\Documents\GitHub\Spotify_hit_song_prediction\src"
+2. From command line, navigate to repository directory location (folder level = src): (MacOS) cd Users/Documents/GitHub/Spotify_hit_song_prediction/src, (Windows) cd "Users\Documents\GitHub\Spotify_hit_song_prediction\src" 
 3. Create the virtual environment:
    - macOS/Linux
      - python3 -m venv venv
-     - source .venv/bin/activate
+     - source venv/bin/activate
    - Windows
      - python -m venv venv
      - .\venv\Scripts\activate
 4. Prerequisites:
-   - Install requirements.txt: pip install -r ..\requirements.txt
+   - Install requirements.txt:
+     - MacOS: pip install -r ../requirements.txt
+     - Windows: pip install -r ..\requirements.txt
 5. Run pre-trained model evaluation script: python 05_model_evaluation.py
 6. The output should include tabular confusion matrix, accuracy, precision, recall F1 scores and feature/coefficient importance for each of the models [logistic regression, random forest, knn, XGBoost]
 
 ## Running the Entire Data Science Pipeline (Recommendation - Run from a virtual environment):
 1. Clone the repository: https://github.com/Lindsager/Spotify_hit_song_prediction
-2. From command line, navigate to repository directory location (folder level = src): similar to --> cd "User\Documents\GitHub\Spotify_hit_song_prediction\src"
+2. From command line, navigate to repository directory location (folder level = src): similar to --> (MacOS) cd Users/Documents/GitHub/Spotify_hit_song_prediction/src, (Windows) cd "Users\Documents\GitHub\Spotify_hit_song_prediction\src" 
 3. Create the virtual environment:
    - macOS/Linux
      - python3 -m venv venv
-     - source .venv/bin/activate
+     - source venv/bin/activate
    - Windows
      - python -m venv venv
      - .\venv\Scripts\activate
 4. Prerequisites:
-   - Install requirements.txt: pip install -r ..\requirements.txt
+   - Install requirements.txt:
+     - MacOS: pip install -r ../requirements.txt
+     - Windows: pip install -r ..\requirements.txt
 5. Run the data processing pipeline:
    - python 01_data_pre_processing.py
      - expected output: semi-processed hit and non-hit song datasets
