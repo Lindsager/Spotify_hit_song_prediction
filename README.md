@@ -17,10 +17,12 @@ The final XGBoost model considers various audio features, including
 
 ![image](https://github.com/Lindsager/Spotify_hit_song_prediction/assets/102261851/f77c877c-bf24-4a59-b7df-8ee926ffa01c)
 
-
-
 ## Notebooks (Includes data processing, exploratory data analysis and modeling process with visual components)
-
+ - 01_data_preparation_and_merging.ipynb: this reads in all raw data files, normalizes formatting across datasets, performs merging and removes overlapping samples [output = processed datasets]
+ - 02_data_normalization_and_sampling.ipynb: this reads in the pre-processed data files, handles outliers, sets minimum sampling year to 1985, bins non-hit samples by year and performs random stratified sampling on non-hit songs [output = processed datasets]
+ - 03_Exploratory_Data_Analysis.ipynb: this contains all visualizations for distribution and time-series analyses as well as feature correlation [output = final dataset]
+ - 04_classification_modeling.ipynb: this trains 4 models (logistic regression, random forest, k-nearest neighbors and xgboost) and completes hyper parameter tuning by random search for tree-based models. visualizations of model evaluation are included [output = model evaluation]
+ 
 ## Pipeline (From data processing through model evaluation)
 - 01_data_pre_processing.py: this reads in all raw data files, normalizes formatting across datasets, performs merging and removes overlapping samples [output = processed datasets]
 - 02_03_data_normalization_and_sampling.py: this reads in the pre-processed data files, handles outliers, sets minimum sampling year to 1985, bins non-hit samples by year and performs random stratified sampling on non-hit songs [output = final dataset]
